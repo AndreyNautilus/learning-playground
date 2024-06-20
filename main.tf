@@ -38,7 +38,7 @@ module "rg-create" {
 
 data "azurerm_resource_group" "exsiting_group" {
   provider = azurerm.secondary
-  name = module.rg-create.names[0]
+  name     = module.rg-create.names[0]
 
   depends_on = [
     module.rg-create
@@ -50,6 +50,6 @@ resource "azurerm_resource_group" "another_group" {
   location = local.region
 
   lifecycle {
-    prevent_destroy = false  # true
+    prevent_destroy = false # true
   }
 }
