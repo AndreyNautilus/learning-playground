@@ -1,1 +1,1 @@
-group-name="test-terraform"
+group-name = "test-terraform"

@@ -14,11 +14,16 @@ provider "azurerm" {
   features {}
 }
 
+locals {
+  region = "West Europe"
+}
+
 module "rg-create" {
   source = "./rg-create"
-  
+
   group-name = var.group-name
-  amount = 2
+  region     = local.region
+  amount     = 2
 }
 
 data "azurerm_resource_group" "exsiting_group" {
@@ -27,4 +32,13 @@ data "azurerm_resource_group" "exsiting_group" {
   depends_on = [
     module.rg-create
   ]
+}
+
+resource "azurerm_resource_group" "another_group" {
+  name     = "rg-another-group"
+  location = local.region
+
+  lifecycle {
+    prevent_destroy = false  # true
+  }
 }
