@@ -14,12 +14,22 @@ provider "azurerm" {
   features {}
 }
 
+provider "azurerm" {
+  # Configuration options
+  features {}
+
+  alias = "secondary"
+}
+
 locals {
   region = "West Europe"
 }
 
 module "rg-create" {
   source = "./rg-create"
+  providers = {
+    azurerm = azurerm.secondary
+  }
 
   group-name = var.group-name
   region     = local.region
@@ -27,6 +37,7 @@ module "rg-create" {
 }
 
 data "azurerm_resource_group" "exsiting_group" {
+  provider = azurerm.secondary
   name = module.rg-create.names[0]
 
   depends_on = [
