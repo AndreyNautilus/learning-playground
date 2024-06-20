@@ -17,15 +17,6 @@ provider "azurerm" {
 module "rg-create" {
   source = "./rg-create"
   
-  name = var.group-name
+  group-name = var.group-name
+  amount = 2
 }
-
-# resource "azurerm_resource_group" "tf-group" {
-#   name     = var.group-name
-#   location = var.region
-
-#   # local-exec example
-#   provisioner "local-exec" {
-#     command = "echo RG ${self.name} is created"
-#   }
-# }

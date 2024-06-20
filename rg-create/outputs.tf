@@ -1,3 +1,3 @@
-output "name" {
-  value = azurerm_resource_group.tf-group.name
+output "names" {
+  value = azurerm_resource_group.rg-group[*].name
 }

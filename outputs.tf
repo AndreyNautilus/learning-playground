@@ -1,3 +1,3 @@
 output "rg-id" {
-  value = module.rg-create.name
+  value = module.rg-create.names
 }

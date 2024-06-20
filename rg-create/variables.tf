@@ -6,3 +6,8 @@ variable "region" {
 variable "group-name" {
   type = string
 }
+
+variable "amount" {
+  type = number
+  default = 1
+}
