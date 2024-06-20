@@ -20,3 +20,11 @@ module "rg-create" {
   group-name = var.group-name
   amount = 2
 }
+
+data "azurerm_resource_group" "exsiting_group" {
+  name = module.rg-create.names[0]
+
+  depends_on = [
+    module.rg-create
+  ]
+}

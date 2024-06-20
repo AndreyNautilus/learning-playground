@@ -10,6 +10,6 @@ resource "azurerm_resource_group" "rg-group" {
 
   # local-exec example
   provisioner "local-exec" {
-    command = "echo RG ${self.name} is created"
+    command = "echo RG ${self.name} is created: ${self.id}"
   }
 }
