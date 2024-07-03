@@ -46,7 +46,7 @@ data "azurerm_resource_group" "exsiting_group" {
 }
 
 resource "azurerm_resource_group" "another_group" {
-  name     = "rg-another-group"
+  name     = "rg-another-group-${var.group-name}"
   location = local.region
 
   lifecycle {
