@@ -24,6 +24,11 @@ resource "azurerm_network_interface" "net_interface" {
   }
 }
 
+resource "azurerm_network_interface_security_group_association" "example" {
+  network_interface_id      = azurerm_network_interface.net_interface.id
+  network_security_group_id = azurerm_network_security_group.vm_access_from_outside.id
+}
+
 # VM
 resource "azurerm_linux_virtual_machine" "linuxvm" {
   name                = "vm-linux-${local.name}"
