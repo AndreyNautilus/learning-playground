@@ -37,16 +37,17 @@ resource "azurerm_linux_virtual_machine" "linuxvm" {
 
   # available sizes: https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/overview
   size = "Standard_B1s"
-  zone = 2 # check Azure Portal for which zones are available
+  zone = 2  # check Azure Portal for which zones are available
 
   network_interface_ids = [
     azurerm_network_interface.net_interface.id,
   ]
 
   admin_username = "adminuser"
-  # TODO: change to ssh
-  disable_password_authentication = false
-  admin_password                  = "SecretP@ssw0rd"
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = file("linuxvm.pub")
+  }
 
   os_disk {
     caching              = "ReadWrite"
