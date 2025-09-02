@@ -1,0 +1,142 @@
+name: Verify linux-shared-lib
+
+on:
+  workflow_call:
+
+jobs:
+  verify-linux-shared-lib:
+    strategy:
+      matrix:
+        include:
+          - name: gcc
+            image: gcc:15
+          # - name: clang
+          # TODO: find (or create) and image with llvm and git
+          #   image: silkeh/clang:18
+    name: linux-shared-lib - ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    container: ${{ matrix.image }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Allow git operations in the workspace
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
+      - name: Install tools
+        run: |
+          apt-get update
+          apt-get install -y --no-upgrade cmake
+
+      # Theoretically the following cases should be independent jobs, but docker image overhead will consume
+      # lots of resources/free GHA budget.
+      # Squash them into a single job to save GHA free budget.
+
+      # default shared build
+      - name: Build libfoo - default
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON ..
+          cmake --build .
+          ctest
+          cmake --install . --prefix=../out
+        working-directory: linux-shared-lib/libfoo
+      - name: Check libfoo - default
+        run: |
+          ls -la lib
+          file lib/libfoo.so | grep -q ", not stripped"
+          nm --dynamic --demangle lib/libfoo.so
+        working-directory: linux-shared-lib/libfoo/out
+      - name: Clean
+        run: git clean -dfx
+
+      # build stripped library
+      - name: Build libfoo - strip
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_STRIP=ON ..
+          cmake --build .
+          ctest
+          cmake --install . --prefix=../out --strip
+        working-directory: linux-shared-lib/libfoo
+      - name: Check libfoo - strip
+        run: |
+          ls -la lib
+          file lib/libfoo.so | grep -q ", stripped"
+          nm --dynamic --demangle lib/libfoo.so
+        working-directory: linux-shared-lib/libfoo/out
+      - name: Clean
+        run: git clean -dfx
+
+      # build using version script
+      - name: Build libfoo - version script
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_USE_VERSION_SCRIPT=ON ..
+          cmake --build .
+          ctest
+          cmake --install . --prefix=../out
+        working-directory: linux-shared-lib/libfoo
+      - name: Check libfoo - version script
+        run: |
+          ls -la lib
+          file lib/libfoo.so
+          nm --dynamic --demangle lib/libfoo.so
+          [ "$(nm --dynamic --demangle --defined-only lib/libfoo.so | wc -l)" -eq 3 ]
+        working-directory: linux-shared-lib/libfoo/out
+      - name: Clean
+        run: git clean -dfx
+
+      # build using API visibility macro
+      - name: Build libfoo - API visibility
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_API_VISIBILITY=ON ..
+          cmake --build .
+          ctest
+          cmake --install . --prefix=../out
+        working-directory: linux-shared-lib/libfoo
+      - name: Check libfoo - API visibility
+        run: |
+          ls -la lib
+          file lib/libfoo.so
+          nm --dynamic --demangle lib/libfoo.so
+          [ "$(nm --dynamic --demangle --defined-only lib/libfoo.so | wc -l)" -eq 1 ]
+        working-directory: linux-shared-lib/libfoo/out
+      - name: Clean
+        run: git clean -dfx
+
+      # build standalone lib and app
+      - name: Build libfoo - deliverable
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_USE_VERSION_SCRIPT=ON -DLIBFOO_API_VISIBILITY=ON ..
+          cmake --build .
+          ctest
+          cmake --install . --prefix=../out
+        working-directory: linux-shared-lib/libfoo
+      - name: Build app
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DLIBFOO_BASE_DIR=../libfoo/out ..
+          cmake --build .
+          ./app
+        working-directory: linux-shared-lib/app
+      - name: Clean
+        run: git clean -dfx
+
+      # build lib and app as project
+      - name: build lib and app
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DLIBFOO_USE_VERSION_SCRIPT=ON -DLIBFOO_API_VISIBILITY=ON ..
+          cmake --build .
+          ctest
+          ./app/app
+        working-directory: linux-shared-lib
+      - name: Clean
+        run: git clean -dfx

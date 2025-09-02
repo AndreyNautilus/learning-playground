@@ -1,0 +1,47 @@
+name: Verify
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      #linux-shared-lib: ${{ steps.flags.outputs.linux-shared-lib }}
+      linux-shared-lib: ${{ steps.detection.outcome == 'skipped' || steps.detection.outputs.linux-shared-lib }}
+    steps:
+      - name: Detect changes
+        id: detection
+        if: github.event_name == 'pull_request'
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            linux-shared-lib:
+              - linux-shared-lib/**
+      - name: Empty step
+        run: echo "empty step"
+      # - name: Expose outputs
+      #   id: flags
+      #   run: |
+      #     if [ "${{ steps.detection.outcome }}" -eq "skipped" ]; then
+      #       LINUX_SHARED_LIB=true
+      #     else
+      #       LINUX_SHARED_LIB="${{ steps.detection.outcome == 'skipped' || steps.detection.outputs.linux-shared-lib }}"
+      #     fi
+      #     {
+      #       echo "linux-shared-lib=$LINUX_SHARED_LIB"
+      #     } >> "$GITHUB_OUTPUT"
+
+  verify-linux-shared-lib:
+    name: Verify linux-shared-lib
+    needs: detect-changes
+    if: needs.detect-changes.outputs.linux-shared-lib == 'true'
+    uses: ./.github/workflows/verify-linux-shared-lib.yaml
