@@ -57,6 +57,10 @@ if(LIBFOO_API_VISIBILITY)
         CXX_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN true
     )
+    target_compile_definitions(${PROJECT_NAME}
+        PRIVATE
+            API_VISIBILITY=1
+    )
 endif()
 
 if(LIBFOO_USE_VERSION_SCRIPT)

@@ -2,7 +2,7 @@
 
 // foo_EXPORTS is defined automatically by cmake
 // see: https://cmake.org/cmake/help/latest/prop_tgt/DEFINE_SYMBOL.html
-#ifdef foo_EXPORTS
+#if defined(foo_EXPORTS) && defined(API_VISIBILITY)
 #   define PUBLIC_API __attribute__((visibility("default")))
 #else
 #   define PUBLIC_API
