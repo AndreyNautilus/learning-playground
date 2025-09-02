@@ -13,6 +13,8 @@ concurrency:
 
 jobs:
   detect-changes:
+    permissions:
+      pull-requests: read
     runs-on: ubuntu-latest
     outputs:
       #linux-shared-lib: ${{ steps.flags.outputs.linux-shared-lib }}
