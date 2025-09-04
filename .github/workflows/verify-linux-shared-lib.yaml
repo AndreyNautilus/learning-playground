@@ -115,7 +115,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_USE_VERSION_SCRIPT=ON -DLIBFOO_API_VISIBILITY=ON ..
           cmake --build .
           ctest
-          cmake --install . --prefix=../out
+          cmake --install . --prefix=../out --strip
         working-directory: linux-shared-lib/libfoo
       - name: Build app
         run: |
@@ -124,7 +124,12 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release -DLIBFOO_BASE_DIR=../libfoo/out ..
           cmake --build .
           ./app
+          cmake --install . --prefix=../out --strip
         working-directory: linux-shared-lib/app
+      - name: Run installed app
+        run: |
+          LD_LIBRARY_PATH=libfoo/out/lib/ ./app/out/bin/app
+        working-directory: linux-shared-lib
       - name: Clean
         run: git clean -dfx
 
