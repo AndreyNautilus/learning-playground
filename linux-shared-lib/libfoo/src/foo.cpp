@@ -3,6 +3,14 @@
 #include <iostream>
 
 namespace libfoo {
+
+int ClassA::foo() {
+    const auto msg = internal::foo_internal();
+    std::cout << "ClassA::foo: " << msg << std::endl;
+    auto result = msg.size();
+    return msg.size();
+}
+
 int foo() {
     const auto msg = internal::foo_internal();
     std::cout << "foo: " << msg << std::endl;
@@ -14,4 +22,4 @@ bool foo2() {
     return msg.size() > 5;
 }
 
-}
+}  // libfoo
