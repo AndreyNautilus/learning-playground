@@ -1,3 +1,3 @@
 # Learning playground
 
-Playgrounds for variuos technologies.
+Playgrounds for various technologies.

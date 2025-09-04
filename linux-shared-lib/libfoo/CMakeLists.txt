@@ -96,7 +96,7 @@ install(TARGETS ${PROJECT_NAME}
     PUBLIC_HEADER DESTINATION include
 )
 if(DEBUG_INFO_FILE)
-    install(FILES ${DEBUG_INFO_FILE} TYPE LIB)
+    install(FILES ${DEBUG_INFO_FILE} DESTINATION lib)
 endif()
 
 enable_testing()
