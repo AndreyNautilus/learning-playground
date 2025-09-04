@@ -1,4 +1,4 @@
-# Terraform excercises
+# Terraform exercises
 
 [Azure Pricing Calculator](https://azure.microsoft.com/en-us/pricing/calculator/)
 
