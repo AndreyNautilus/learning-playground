@@ -102,7 +102,7 @@ jobs:
           ls -la lib
           file lib/libfoo.so
           nm --dynamic --demangle lib/libfoo.so
-          [ "$(nm --dynamic --demangle --defined-only lib/libfoo.so | wc -l)" -eq 1 ]
+          [ "$(nm --dynamic --demangle --defined-only lib/libfoo.so | wc -l)" -eq 2 ]
         working-directory: linux-shared-lib/libfoo/out
       - name: Clean
         run: git clean -dfx
