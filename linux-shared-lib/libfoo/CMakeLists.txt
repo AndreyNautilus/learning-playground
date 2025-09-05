@@ -24,7 +24,7 @@ option(LIBFOO_STRIP "Strip debug info into as separate file" OFF)
 message(STATUS "Strip debug info into: ${LIBFOO_STRIP}")
 
 option(LIBFOO_VERSIONING "Add version to so file" OFF)
-message(STATUS "Strip debug info into: ${LIBFOO_VERSIONING}")
+message(STATUS "Versioning via SONAME: ${LIBFOO_VERSIONING}")
 
 if(LIBFOO_SHARED)
     set(BUILD_TYPE_LIBFOO SHARED)
