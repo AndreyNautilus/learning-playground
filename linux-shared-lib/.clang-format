@@ -1,0 +1,12 @@
+---
+BasedOnStyle: Google
+IndentWidth: 2
+IndentPPDirectives: AfterHash
+IncludeCategories:
+  # STL has lowest priority
+  - Regex:           '<[[:alnum:].]+>'
+    Priority:        10
+  # everything else - high
+  - Regex:           '.*'
+    Priority:        1
+    SortPriority:    0

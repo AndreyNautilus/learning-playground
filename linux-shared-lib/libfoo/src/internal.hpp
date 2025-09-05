@@ -4,4 +4,4 @@
 
 namespace libfoo::internal {
 std::string foo_internal();
-} // libfoo::internal
+}  // namespace libfoo::internal
