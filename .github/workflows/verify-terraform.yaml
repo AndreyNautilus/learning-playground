@@ -5,6 +5,7 @@ on:
 
 jobs:
   fmt_and_validate:
+    name: Format & Validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
