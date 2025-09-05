@@ -1,7 +1,5 @@
 #include "internal.hpp"
 
 namespace libfoo::internal {
-std::string foo_internal() {
-    return "hello, world!";
-}
-}  // libfoo::internal
+std::string foo_internal() { return "hello, world!"; }
+}  // namespace libfoo::internal
