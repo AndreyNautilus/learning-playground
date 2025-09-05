@@ -17,8 +17,12 @@ jobs:
       pull-requests: read
     runs-on: ubuntu-latest
     outputs:
-      terraform: ${{ steps.detection.outcome == 'skipped' || steps.detection.outputs.terraform }}
-      linux-shared-lib: ${{ steps.detection.outcome == 'skipped' || steps.detection.outputs.linux-shared-lib }}
+      terraform: >-
+        ${{ steps.detection.outcome == 'skipped' ||
+            steps.detection.outputs.terraform }}
+      linux-shared-lib: >-
+        ${{ steps.detection.outcome == 'skipped' ||
+            steps.detection.outputs.linux-shared-lib }}
     steps:
       - name: Detect changes
         id: detection

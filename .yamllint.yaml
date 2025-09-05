@@ -1,0 +1,13 @@
+extends: default
+
+rules:
+  colons:
+    ignore:
+      - .clang-format
+  document-start: disable  # personal
+  line-length:
+    max: 100
+    ignore:
+      - verify-linux-shared-lib.yaml  # long cmake commands, shouldn't break for readability
+  truthy:
+    check-keys: false  # to allow Github 'on:' syntax

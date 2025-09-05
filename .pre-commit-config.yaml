@@ -31,3 +31,8 @@ repos:
     rev: 86fdcc9bd34d6afbbd29358b97436c8ffe3aa3b2  # frozen: v21.1.0
     hooks:
       - id: clang-format
+
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.37.1
+    hooks:
+      - id: yamllint
