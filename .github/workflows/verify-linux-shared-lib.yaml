@@ -25,9 +25,9 @@ jobs:
           apt-get update
           apt-get install -y --no-upgrade cmake
 
-      # Theoretically the following cases should be independent jobs, but docker image overhead will consume
-      # lots of resources/free GHA budget.
-      # Squash them into a single job to save GHA free budget.
+      # Theoretically the following cases should be independent jobs,
+      # but docker image overhead will consume lots of resources/free GHA budget.
+      # Squashing them into a single job to save GHA free budget.
 
       # default shared build
       - name: Build libfoo - default
