@@ -1,0 +1,22 @@
+name: Verify terraform
+
+on:
+  workflow_call:
+
+jobs:
+  fmt_and_validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.8.5"
+      - name: Format terraform
+        run: terraform fmt
+        working-directory: terraform
+      - name: Terraform Init
+        run: terraform init -input=false
+        working-directory: terraform
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color

@@ -17,7 +17,7 @@ jobs:
       pull-requests: read
     runs-on: ubuntu-latest
     outputs:
-      #linux-shared-lib: ${{ steps.flags.outputs.linux-shared-lib }}
+      terraform: ${{ steps.detection.outcome == 'skipped' || steps.detection.outputs.terraform }}
       linux-shared-lib: ${{ steps.detection.outcome == 'skipped' || steps.detection.outputs.linux-shared-lib }}
     steps:
       - name: Detect changes
@@ -28,22 +28,38 @@ jobs:
           filters: |
             linux-shared-lib:
               - linux-shared-lib/**
+            terraform:
+              - terraform/**
       - name: Empty step
         run: echo "empty step"
-      # - name: Expose outputs
-      #   id: flags
-      #   run: |
-      #     if [ "${{ steps.detection.outcome }}" -eq "skipped" ]; then
-      #       LINUX_SHARED_LIB=true
-      #     else
-      #       LINUX_SHARED_LIB="${{ steps.detection.outcome == 'skipped' || steps.detection.outputs.linux-shared-lib }}"
-      #     fi
-      #     {
-      #       echo "linux-shared-lib=$LINUX_SHARED_LIB"
-      #     } >> "$GITHUB_OUTPUT"
 
   verify-linux-shared-lib:
     name: Verify linux-shared-lib
     needs: detect-changes
     if: needs.detect-changes.outputs.linux-shared-lib == 'true'
     uses: ./.github/workflows/verify-linux-shared-lib.yaml
+
+  verify-terraform:
+    name: Verify terraform
+    needs: detect-changes
+    if: needs.detect-changes.outputs.terraform == 'true'
+    uses: ./.github/workflows/verify-terraform.yaml
+
+  conclusion:
+    name: Conclusion
+    needs:
+      # list all verification jobs here
+      - verify-linux-shared-lib
+      - verify-terraform
+    if: always()
+    runs-on: ubuntu-latest
+    env:
+      HAS_FAILURE: ${{ contains(needs.*.outcome, 'failure') }}
+    steps:
+      - name: Report failure
+        if: env.HAS_FAILURE == 'true'
+        run: |
+          echo "Some jobs failed"
+          exit 1
+      - name: Report success
+        run: echo "no failures"
