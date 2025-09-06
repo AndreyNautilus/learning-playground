@@ -4,5 +4,6 @@ project(lib_setup)
 
 enable_testing()
 
+add_subdirectory(libbar)
 add_subdirectory(libfoo)
 add_subdirectory(app)

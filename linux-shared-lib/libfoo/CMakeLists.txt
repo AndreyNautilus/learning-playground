@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.21)
 
 project(foo)
 
@@ -25,6 +25,9 @@ message(STATUS "Strip debug info into: ${LIBFOO_STRIP}")
 
 option(LIBFOO_VERSIONING "Add version to so file" OFF)
 message(STATUS "Versioning via SONAME: ${LIBFOO_VERSIONING}")
+
+option(LIBFOO_WITH_LIBBAR "" OFF)
+message(STATUS "libfoo uses libbar: ${LIBFOO_WITH_LIBBAR}")
 
 if(LIBFOO_SHARED)
     set(BUILD_TYPE_LIBFOO SHARED)
@@ -89,6 +92,21 @@ if(LIBFOO_VERSIONING)
         VERSION 1.2.3
         SOVERSION 1
     )
+endif()
+
+if(LIBFOO_WITH_LIBBAR)
+    if(NOT TARGET foo)
+    endif()
+
+    target_link_libraries(${PROJECT_NAME}
+        PRIVATE
+            bar
+    )
+    target_compile_definitions(${PROJECT_NAME}
+        PRIVATE
+            WITH_LIBBAR=1
+    )
+
 endif()
 
 install(TARGETS ${PROJECT_NAME}
