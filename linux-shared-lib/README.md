@@ -1,6 +1,6 @@
 # A setup for shared library development and distribution
 
-Example code for the blog post.
+Example code for [the blog post](https://andreynautilus.github.io/posts/2025-09-02-distributing-linux-so/).
 
 ## Setup
 
