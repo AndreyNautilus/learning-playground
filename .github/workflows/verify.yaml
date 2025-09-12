@@ -32,6 +32,8 @@ jobs:
           filters: |
             linux-shared-lib:
               - linux-shared-lib/**
+            linux-shared-lib-images:
+              - linux-shared-lib/images/**
             terraform:
               - terraform/**
       - name: Empty step
