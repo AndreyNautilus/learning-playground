@@ -22,7 +22,12 @@ jobs:
             steps.detection.outputs.terraform }}
       linux-shared-lib: >-
         ${{ steps.detection.outcome == 'skipped' ||
-            steps.detection.outputs.linux-shared-lib }}
+            steps.detection.outputs.linux-shared-lib ||
+            steps.detection.outputs.linux-shared-lib-ci }}
+      linux-shared-lib-images: >-
+        ${{ steps.detection.outcome == 'skipped' ||
+            steps.detection.outputs.linux-shared-lib-images ||
+            steps.detection.outputs.linux-shared-lib-ci }}
     steps:
       - name: Detect changes
         id: detection
@@ -32,6 +37,10 @@ jobs:
           filters: |
             linux-shared-lib:
               - linux-shared-lib/**
+            linux-shared-lib-images:
+              - linux-shared-lib/images/**
+            linux-shared-lib-ci:
+              - .github/workflows/verify-linux-shared-lib.yaml
             terraform:
               - terraform/**
       - name: Empty step
@@ -40,8 +49,13 @@ jobs:
   verify-linux-shared-lib:
     name: Verify linux-shared-lib
     needs: detect-changes
-    if: needs.detect-changes.outputs.linux-shared-lib == 'true'
+    if: >-
+      needs.detect-changes.outputs.linux-shared-lib == 'true' ||
+      needs.detect-changes.outputs.linux-shared-lib-images == 'true'
     uses: ./.github/workflows/verify-linux-shared-lib.yaml
+    with:
+      code: ${{ fromJSON(needs.detect-changes.outputs.linux-shared-lib) }}
+      images: ${{ fromJSON(needs.detect-changes.outputs.linux-shared-lib-images) }}
 
   verify-terraform:
     name: Verify terraform

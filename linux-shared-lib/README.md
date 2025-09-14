@@ -7,6 +7,7 @@ Example code for [the blog post](https://andreynautilus.github.io/posts/2025-09-
 - `libfoo` - a library that can be built as either `STATIC` or `SHARED`;
 - `app` - an app that consumes `libfoo`. Can consume static library as regular cmake target
   or shared library as imported cmake target.
+- `images` - contains images for CI (see [README](images/README.md) for more details);
 
 ## Build instructions
 

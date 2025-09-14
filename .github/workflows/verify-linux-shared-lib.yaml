@@ -2,28 +2,35 @@ name: Verify linux-shared-lib
 
 on:
   workflow_call:
+    inputs:
+      code:
+        description: Verify the code
+        required: false
+        type: boolean
+        default: true
+      images:
+        description: Verify images
+        required: false
+        type: boolean
+        default: true
 
 jobs:
-  verify-linux-shared-lib:
+  verify-code:
     strategy:
       matrix:
         include:
           - name: gcc
-            image: gcc:15
-          # - name: clang
-          # TODO: find (or create) and image with llvm and git
-          #   image: silkeh/clang:18
+            image: andreynautilus/gcc:15-2025-09-14
+          - name: clang
+            image: andreynautilus/clang:17-2025-09-14
     name: linux-shared-lib - ${{ matrix.name }}
+    if: inputs.code
     runs-on: ubuntu-latest
     container: ${{ matrix.image }}
     steps:
       - uses: actions/checkout@v5
       - name: Allow git operations in the workspace
         run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
-      - name: Install tools
-        run: |
-          apt-get update
-          apt-get install -y --no-upgrade cmake
 
       # Theoretically the following cases should be independent jobs,
       # but docker image overhead will consume lots of resources/free GHA budget.
@@ -145,3 +152,18 @@ jobs:
         working-directory: linux-shared-lib
       - name: Clean
         run: git clean -dfx
+
+  verify-images:
+    name: Image
+    if: inputs.images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build images
+        env:
+          CALVER_VERSION: ci
+        run: |
+          docker buildx bake
+        working-directory: linux-shared-lib/images
