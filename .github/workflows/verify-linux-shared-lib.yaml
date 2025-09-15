@@ -168,8 +168,9 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Build images
         run: |
-          docker buildx bake
+          docker buildx bake --load
         working-directory: linux-shared-lib/images
+      - run: docker images
 
       # Scan with dockle
       - name: Scan clang with dockle
