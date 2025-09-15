@@ -180,8 +180,8 @@ jobs:
           format: list
           exit-code: '1'
           exit-level: warn
-          # DKL-DI-0005 - Clear apt-get caches (base image doesn't clear cache)
-          # CIS-DI-0001 - Create a user for the container !! TODO !!
+          # DKL-DI-0005: Clear apt-get caches (base image doesn't clear cache)
+          # CIS-DI-0001: Create a user for the container !! TODO !!
           ignore: DKL-DI-0005,CIS-DI-0001
           accept-key: cmake,git
       - name: Scan gcc with dockle
@@ -191,5 +191,7 @@ jobs:
           format: list
           exit-code: '1'
           exit-level: warn
-          # DKL-DI-0005 - Clear apt-get caches (base image doesn't clear cache)
-          ignore: DKL-DI-0005
+          # DKL-DI-0005: Clear apt-get caches (base image doesn't clear cache)
+          # CIS-DI-0001: Create a user for the container
+          ignore: DKL-DI-0005,CIS-DI-0001
+          accept-key: cmake,GCC_MIRRORS,GCC_VERSION,deb,savedAptMark
