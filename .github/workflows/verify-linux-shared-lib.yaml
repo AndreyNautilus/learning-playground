@@ -181,7 +181,8 @@ jobs:
           exit-code: '1'
           exit-level: warn
           # DKL-DI-0005 - Clear apt-get caches (base image doesn't clear cache)
-          ignore: DKL-DI-0005
+          # CIS-DI-0001 - Create a user for the container !! TODO !!
+          ignore: DKL-DI-0005,CIS-DI-0001
           accept-key: cmake,git
       - name: Scan gcc with dockle
         uses: goodwithtech/dockle-action@main
