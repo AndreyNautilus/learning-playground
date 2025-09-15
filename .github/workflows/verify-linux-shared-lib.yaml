@@ -184,6 +184,7 @@ jobs:
           # # CIS-DI-0001: Create a user for the container !! TODO !!
           # ignore: DKL-DI-0005,CIS-DI-0001
           accept-key: cmake,git
+        working-directory: linux-shared-lib/images
       - name: Scan gcc with dockle
         uses: goodwithtech/dockle-action@main
         with:
