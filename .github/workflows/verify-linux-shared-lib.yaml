@@ -182,13 +182,13 @@ jobs:
           image: 'andreynautilus/clang:${{ env.CLANG_VERSION }}-${{ env.CALVER_VERSION }}'
           format: list
           exit-code: '1'
-          exit-level: fatal  # TODO: switch to warn
-          accept-key: cmake,git
+          exit-level: warn
+          # accept-key: cmake,git
       - name: Scan gcc with dockle
         uses: goodwithtech/dockle-action@main
         with:
           image: 'andreynautilus/gcc:${{ env.GCC_VERSION }}-${{ env.CALVER_VERSION }}'
           format: list
           exit-code: '1'
-          exit-level: fatal  # TODO: switch to warn
-          accept-key: cmake,GCC_MIRRORS,GCC_VERSION,deb,savedAptMark,gcc,fetch,LD_PRELOAD,file
+          exit-level: warn
+          # accept-key: cmake,GCC_MIRRORS,GCC_VERSION,deb,savedAptMark,gcc,fetch,LD_PRELOAD,file
