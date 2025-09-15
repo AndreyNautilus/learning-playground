@@ -26,8 +26,8 @@ jobs:
             steps.detection.outputs.linux-shared-lib-ci }}
       linux-shared-lib-images: >-
         ${{ steps.detection.outcome == 'skipped' ||
-            steps.detection.outputs.linux-shared-lib-images ||
-            steps.detection.outputs.linux-shared-lib-ci }}
+            steps.detection.outputs.linux-shared-lib-images == 'true' ||
+            steps.detection.outputs.linux-shared-lib-ci == 'true' }}
     steps:
       - name: Detect changes
         id: detection
