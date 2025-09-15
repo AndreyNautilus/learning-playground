@@ -1,4 +1,8 @@
-# DKL-DI-0005: Clear apt-get caches (base image doesn't clear cache)
+# DKL-DI-0005: Clear apt-get caches
+# base image doesn't clear cache
 DKL-DI-0005
 # CIS-DI-0001: Create a user for the container !! TODO: fixme !!
 CIS-DI-0001
+# CIS-DI-0010: Do not store credential in environment variables/files
+# dockle produces TONS of false-positives for expressions like abc=xyz
+CIS-DI-0010
