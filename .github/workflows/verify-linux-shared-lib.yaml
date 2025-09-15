@@ -182,7 +182,7 @@ jobs:
           exit-level: warn
           # DKL-DI-0005 - Clear apt-get caches (base image doesn't clear cache)
           ignore: DKL-DI-0005
-          accept-key: cmake
+          accept-key: cmake,git
       - name: Scan gcc with dockle
         uses: goodwithtech/dockle-action@main
         with:
