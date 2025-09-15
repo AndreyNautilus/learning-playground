@@ -157,13 +157,36 @@ jobs:
     name: Image
     if: inputs.images
     runs-on: ubuntu-latest
+    env:
+      CLANG_VERSION: '17'
+      GCC_VERSION: '15'
+      CALVER_VERSION: ci
     steps:
       - uses: actions/checkout@v5
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build images
-        env:
-          CALVER_VERSION: ci
         run: |
           docker buildx bake
         working-directory: linux-shared-lib/images
+
+      # Scan with dockle
+      - name: Scan clang with dockle
+        uses: goodwithtech/dockle-action@main
+        with:
+          image: 'andreynautilus/clang:${{ env.CLANG_VERSION }}-${{ env.CALVER_VERSION }}'
+          format: list
+          exit-code: '1'
+          exit-level: warn
+          # DKL-DI-0005 - Clear apt-get caches (base image doesn't clear cache)
+          ignore: DKL-DI-0005
+      - name: Scan gcc with dockle
+        uses: goodwithtech/dockle-action@main
+        with:
+          image: 'andreynautilus/gcc:${{ env.GCC_VERSION }}-${{ env.CALVER_VERSION }}'
+          format: list
+          exit-code: '1'
+          exit-level: warn
+          # DKL-DI-0005 - Clear apt-get caches (base image doesn't clear cache)
+          ignore: DKL-DI-0005
