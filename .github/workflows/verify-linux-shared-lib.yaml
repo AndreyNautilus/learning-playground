@@ -173,6 +173,9 @@ jobs:
       - run: docker images
 
       # Scan with dockle
+      - name: Prepare dockle environment
+        run: |
+          cp linux-shared-lib/images/.dockleignore .
       - name: Scan clang with dockle
         uses: goodwithtech/dockle-action@main
         with:
@@ -184,7 +187,6 @@ jobs:
           # # CIS-DI-0001: Create a user for the container !! TODO !!
           # ignore: DKL-DI-0005,CIS-DI-0001
           accept-key: cmake,git
-        working-directory: linux-shared-lib/images
       - name: Scan gcc with dockle
         uses: goodwithtech/dockle-action@main
         with:
