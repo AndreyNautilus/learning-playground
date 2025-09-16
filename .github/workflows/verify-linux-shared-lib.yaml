@@ -183,7 +183,6 @@ jobs:
           format: list
           exit-code: '1'
           exit-level: warn
-          # accept-key: cmake,git
       - name: Scan gcc with dockle
         uses: goodwithtech/dockle-action@main
         with:
@@ -191,4 +190,3 @@ jobs:
           format: list
           exit-code: '1'
           exit-level: warn
-          # accept-key: cmake,GCC_MIRRORS,GCC_VERSION,deb,savedAptMark,gcc,fetch,LD_PRELOAD,file

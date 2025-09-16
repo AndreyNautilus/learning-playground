@@ -19,11 +19,11 @@ jobs:
     outputs:
       terraform: >-
         ${{ steps.detection.outcome == 'skipped' ||
-            steps.detection.outputs.terraform }}
+            steps.detection.outputs.terraform == 'true' }}
       linux-shared-lib: >-
         ${{ steps.detection.outcome == 'skipped' ||
-            steps.detection.outputs.linux-shared-lib ||
-            steps.detection.outputs.linux-shared-lib-ci }}
+            steps.detection.outputs.linux-shared-lib == 'true' ||
+            steps.detection.outputs.linux-shared-lib-ci == 'true' }}
       linux-shared-lib-images: >-
         ${{ steps.detection.outcome == 'skipped' ||
             steps.detection.outputs.linux-shared-lib-images == 'true' ||
