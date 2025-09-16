@@ -157,13 +157,36 @@ jobs:
     name: Image
     if: inputs.images
     runs-on: ubuntu-latest
+    env:
+      # bake variables
+      CLANG_VERSION: '17'
+      GCC_VERSION: '15'
+      CALVER_VERSION: ci
     steps:
       - uses: actions/checkout@v5
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build images
-        env:
-          CALVER_VERSION: ci
         run: |
-          docker buildx bake
+          docker buildx bake --load
         working-directory: linux-shared-lib/images
+
+      # Scan with dockle
+      - name: Prepare dockle environment
+        run: |
+          cp linux-shared-lib/images/.dockleignore .
+      - name: Scan clang with dockle
+        uses: goodwithtech/dockle-action@main
+        with:
+          image: 'andreynautilus/clang:${{ env.CLANG_VERSION }}-${{ env.CALVER_VERSION }}'
+          format: list
+          exit-code: '1'
+          exit-level: warn
+      - name: Scan gcc with dockle
+        uses: goodwithtech/dockle-action@main
+        with:
+          image: 'andreynautilus/gcc:${{ env.GCC_VERSION }}-${{ env.CALVER_VERSION }}'
+          format: list
+          exit-code: '1'
+          exit-level: warn
