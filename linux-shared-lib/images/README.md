@@ -45,3 +45,18 @@ or push individual images:
 ```bash
 $ docker push andreynautilus/clang:17-YYYY-MM-DD andreynautilus/gcc:15-YYYY-MM-DD
 ```
+
+## Lint
+
+[hadolint](https://github.com/hadolint/hadolint) (doesn't work on windows):
+```bash
+images$ hadolint gcc/Dockerfile --verbose
+images$ hadolint clang/Dockerfile --verbose
+```
+
+[dockle](https://github.com/goodwithtech/dockle) (not available on windows):
+```bash
+# adjust images tags
+images$ dockle --exit-level fatal --format list --exit-level fatal --exit-code 1 andreynautilus/gcc:15-ci
+images$ dockle --exit-level fatal --format list --exit-level fatal --exit-code 1 andreynautilus/clang:17-ci
+```
