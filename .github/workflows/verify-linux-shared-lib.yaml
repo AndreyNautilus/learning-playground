@@ -19,10 +19,16 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: gcc
+          - name: gcc with bfd
             image: andreynautilus/gcc:15-2025-09-14
             cmake-flags: -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=bfd
-          - name: clang
+          - name: gcc with gold
+            image: andreynautilus/gcc:15-2025-09-14
+            cmake-flags: -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=gold
+          - name: gcc with mold
+            image: andreynautilus/gcc:15-2025-09-14
+            cmake-flags: -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold
+          - name: clang with lld
             image: andreynautilus/clang:17-2025-09-14
             cmake-flags: -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld
     name: linux-shared-lib - ${{ matrix.name }}
@@ -33,6 +39,15 @@ jobs:
       - uses: actions/checkout@v5
       - name: Allow git operations in the workspace
         run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
+
+      - if: contains(matrix.cmake-flags, 'mold')
+        run: |
+          apt-get update
+          apt-get install mold
+      - if: contains(matrix.cmake-flags, 'gold')
+        run: |
+          apt-get update
+          apt-get install binutils-gold
 
       # Theoretically the following cases should be independent jobs,
       # but docker image overhead will consume lots of resources/free GHA budget.
