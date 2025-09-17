@@ -42,15 +42,6 @@ jobs:
       - name: Allow git operations in the workspace
         run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
 
-      - if: contains(matrix.cmake-flags, 'mold')
-        run: |
-          apt-get update
-          apt-get install mold
-      - if: contains(matrix.cmake-flags, 'gold')
-        run: |
-          apt-get update
-          apt-get install -y binutils-gold
-
       # Theoretically the following cases should be independent jobs,
       # but docker image overhead will consume lots of resources/free GHA budget.
       # Squashing them into a single job to save GHA free budget.
