@@ -21,7 +21,7 @@ jobs:
         include:
           - name: gcc
             image: andreynautilus/gcc:15-2025-09-14
-            cmake-flags: -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=ld.bfd
+            cmake-flags: -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=bfd
           - name: clang
             image: andreynautilus/clang:17-2025-09-14
             cmake-flags: -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld
