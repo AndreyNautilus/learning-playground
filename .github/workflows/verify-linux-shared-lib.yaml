@@ -17,12 +17,22 @@ on:
 jobs:
   verify-code:
     strategy:
+      fail-fast: false  # let all jobs to finish
       matrix:
         include:
-          - name: gcc
-            image: andreynautilus/gcc:15-2025-09-14
-          - name: clang
-            image: andreynautilus/clang:17-2025-09-14
+          - name: gcc with bfd
+            image: andreynautilus/gcc:15-2025-09-17
+            cmake-flags: -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=bfd
+          - name: gcc with gold
+            # 'gold' linker is deprecated as of binutils>=2.44 (2025-02-02)
+            image: andreynautilus/gcc:15-2025-09-17
+            cmake-flags: -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=gold
+          - name: gcc with mold
+            image: andreynautilus/gcc:15-2025-09-17
+            cmake-flags: -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold
+          - name: clang with lld
+            image: andreynautilus/clang:17-2025-09-17
+            cmake-flags: -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld
     name: linux-shared-lib - ${{ matrix.name }}
     if: inputs.code
     runs-on: ubuntu-latest
@@ -41,7 +51,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON ..
+          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON ${{ matrix.cmake-flags }} ..
           cmake --build .
           ctest
           cmake --install . --prefix=../out
@@ -60,7 +70,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_STRIP=ON ..
+          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_STRIP=ON ${{ matrix.cmake-flags }} ..
           cmake --build .
           ctest
           cmake --install . --prefix=../out --strip
@@ -79,7 +89,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_USE_VERSION_SCRIPT=ON ..
+          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_USE_VERSION_SCRIPT=ON ${{ matrix.cmake-flags }} ..
           cmake --build .
           ctest
           cmake --install . --prefix=../out
@@ -99,17 +109,20 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_API_VISIBILITY=ON ..
+          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_API_VISIBILITY=ON ${{ matrix.cmake-flags }} ..
           cmake --build .
           ctest
           cmake --install . --prefix=../out
         working-directory: linux-shared-lib/libfoo
       - name: Check libfoo - API visibility
+        env:
+          # 'gold' expose '__bss___bss_start', '_edata' and '_end' data symbols
+          EXPORTED: ${{ contains(matrix.cmake-flags, 'gold') && 5 || 2 }}
         run: |
           ls -la lib
           file lib/libfoo.so
           nm --dynamic --demangle lib/libfoo.so
-          [ "$(nm --dynamic --demangle --defined-only lib/libfoo.so | wc -l)" -eq 2 ]
+          [ "$(nm --dynamic --demangle --defined-only lib/libfoo.so | wc -l)" -eq $EXPORTED ]
         working-directory: linux-shared-lib/libfoo/out
       - name: Clean
         run: git clean -dfx
@@ -119,7 +132,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_USE_VERSION_SCRIPT=ON -DLIBFOO_API_VISIBILITY=ON ..
+          cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_SHARED_LIBS=ON -DLIBFOO_USE_VERSION_SCRIPT=ON -DLIBFOO_API_VISIBILITY=ON ${{ matrix.cmake-flags }} ..
           cmake --build .
           ctest
           cmake --install . --prefix=../out --strip
@@ -145,7 +158,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DLIBFOO_USE_VERSION_SCRIPT=ON -DLIBFOO_API_VISIBILITY=ON ..
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DLIBFOO_USE_VERSION_SCRIPT=ON -DLIBFOO_API_VISIBILITY=ON ${{ matrix.cmake-flags }} ..
           cmake --build .
           ctest
           ./app/app
