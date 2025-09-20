@@ -1,6 +1,8 @@
 {
     global:
-        _ZN6libfoo*;
+        extern "C++" {
+            libfoo::*;
+        };
     local:
         _ZN6libfoo8internal*;  # won't work :(
         *;
