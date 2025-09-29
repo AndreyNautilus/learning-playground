@@ -28,7 +28,7 @@ repos:
   - repo: https://github.com/pre-commit/mirrors-clang-format
     # 'clang-format' may produce different result for different versions
     # with the same config. Better to choose one version and stick to it.
-    rev: 86fdcc9bd34d6afbbd29358b97436c8ffe3aa3b2  # frozen: v21.1.0
+    rev: 719856d56a62953b8d2839fb9e851f25c3cfeef8  # frozen: v21.1.2
     hooks:
       - id: clang-format
 
