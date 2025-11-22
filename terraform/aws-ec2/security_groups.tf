@@ -1,12 +1,13 @@
 locals {
-  vpc_id = "vpc-03f5f6c27f69bfed2"  # use data
+  # TODO: use data or create a VPC
+  default_vpc_id = "vpc-03f5f6c27f69bfed2"
 }
 
 # Allow HTTP in and all out
 resource "aws_security_group" "allow_http_in_all_out" {
   name        = "allow_http"
   description = "Allow HTTP inbound traffic and all outbound traffic"
-  vpc_id      = local.vpc_id
+  vpc_id      = local.default_vpc_id
 
   tags = {
     Name = "In HTTP"
@@ -31,7 +32,7 @@ resource "aws_vpc_security_group_egress_rule" "allow_http_all_traffic_ipv4" {
 resource "aws_security_group" "allow_http_and_ssh_in_all_out" {
   name        = "allow_http_ssh"
   description = "Allow HTTP and SSH inbound traffic and all outbound traffic"
-  vpc_id      = local.vpc_id
+  vpc_id      = local.default_vpc_id
 
   tags = {
     Name = "In HTTP & SSH"

@@ -1,5 +1,11 @@
 # Create an EC2 instance on AWS
 
+- couple of Security Groups (http only and http+ssh);
+- EC2 instance with SSH access, and http server via User Data;
+
+## Prerequisites
+
+- an SSH key-pair named `main` should already exist (created upfront);
 
 ## Authentication
 
