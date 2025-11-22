@@ -19,7 +19,8 @@ jobs:
     outputs:
       terraform: >-
         ${{ steps.detection.outcome == 'skipped' ||
-            steps.detection.outputs.terraform == 'true' }}
+            steps.detection.outputs.terraform == 'true' ||
+            steps.detection.outputs.terraform-ci == 'true' }}
       linux-shared-lib: >-
         ${{ steps.detection.outcome == 'skipped' ||
             steps.detection.outputs.linux-shared-lib == 'true' ||
@@ -43,6 +44,8 @@ jobs:
               - .github/workflows/verify-linux-shared-lib.yaml
             terraform:
               - terraform/**
+            terraform-ci:
+              - .github/workflows/verify-terraform.yaml
       - name: Empty step
         run: echo "empty step"
 

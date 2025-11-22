@@ -4,8 +4,14 @@ on:
   workflow_call:
 
 jobs:
-  fmt_and_validate:
-    name: Format & Validate
+  fmt-and-validate:
+    strategy:
+      fail-fast: false  # let all jobs to finish
+      matrix:
+        include:
+          - dir: az-experiments
+          - dir: az-vm
+    name: Format & Validate - ${{ matrix.dir }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -13,11 +19,17 @@ jobs:
         with:
           terraform_version: "1.8.5"
       - name: Format terraform
-        run: terraform fmt
-        working-directory: terraform
+        run: terraform fmt -check -diff
+        working-directory: terraform/${{ matrix.dir }}
       - name: Terraform Init
         run: terraform init -input=false
-        working-directory: terraform
+        working-directory: terraform/${{ matrix.dir }}
+      - name: Custom preparation for az-vm
+        if: matrix.dir == 'az-vm'
+        run: |
+          ssh-keygen -t ed25519 -f linuxvm
+          rm linuxvm
+        working-directory: terraform/${{ matrix.dir }}
       - name: Terraform Validate
-        id: validate
         run: terraform validate -no-color
+        working-directory: terraform/${{ matrix.dir }}
