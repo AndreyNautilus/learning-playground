@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ${{ matrix.image }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Allow git operations in the workspace
         run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
 
@@ -176,7 +176,7 @@ jobs:
       GCC_VERSION: '15'
       CALVER_VERSION: ci
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
