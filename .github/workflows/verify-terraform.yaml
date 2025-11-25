@@ -9,6 +9,7 @@ jobs:
       fail-fast: false  # let all jobs to finish
       matrix:
         include:
+          - dir: aws-ec2
           - dir: az-experiments
           - dir: az-vm
     name: Format & Validate - ${{ matrix.dir }}
