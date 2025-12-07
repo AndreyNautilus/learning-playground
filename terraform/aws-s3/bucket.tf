@@ -21,11 +21,3 @@ resource "aws_s3_bucket_public_access_block" "main-bucket-public-access" {
   ignore_public_acls      = false
   restrict_public_buckets = true
 }
-
-resource "aws_s3_bucket_website_configuration" "main-bucket-website" {
-  bucket = aws_s3_bucket.main-bucket.id
-
-  index_document {
-    suffix = "index.html"
-  }
-}
