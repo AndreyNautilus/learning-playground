@@ -2,6 +2,6 @@
 
 - S3 bucket with versioning and website config;
 - website content;
-- ACL policy;
+- bucket policy;
 - replication;
 - lifecycle config;
