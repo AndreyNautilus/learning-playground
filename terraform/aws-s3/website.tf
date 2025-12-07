@@ -11,7 +11,9 @@ locals {
 }
 
 resource "null_resource" "main-bucket-website-index_html" {
-  depends_on = [aws_s3_bucket.main-bucket]
+  depends_on = [
+    aws_s3_bucket.main-bucket
+  ]
 
   provisioner "local-exec" {
     command = "aws s3 cp ./${local.website_dir} s3://${aws_s3_bucket.main-bucket.bucket}/ --recursive"
