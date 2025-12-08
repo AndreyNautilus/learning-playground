@@ -21,14 +21,14 @@ repos:
         name: Common misspellings
 
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.7.7
+    rev: v1.7.9
     hooks:
       - id: actionlint
 
   - repo: https://github.com/pre-commit/mirrors-clang-format
     # 'clang-format' may produce different result for different versions
     # with the same config. Better to choose one version and stick to it.
-    rev: 86fdcc9bd34d6afbbd29358b97436c8ffe3aa3b2  # frozen: v21.1.0
+    rev: 2085c9678863cfe2db541d4d98a2ff12baa878ab  # frozen: v21.1.7
     hooks:
       - id: clang-format
 
