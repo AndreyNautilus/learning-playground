@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "main-bucket" {
   bucket        = "andreynautilus-s3-demo-v2"
-  force_destroy = true # for exercise purpose only
+  force_destroy = true # allow destroy with objects
 
   tags = {
     Name = "AN Demo bucket"

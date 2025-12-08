@@ -12,7 +12,8 @@ locals {
 
 resource "null_resource" "main-bucket-website-index_html" {
   depends_on = [
-    aws_s3_bucket.main-bucket
+    aws_s3_bucket.main-bucket,
+    aws_s3_bucket_replication_configuration.replication
   ]
 
   provisioner "local-exec" {
