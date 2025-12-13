@@ -10,6 +10,7 @@ jobs:
       matrix:
         include:
           - dir: aws-ec2
+          - dir: aws-s3
           - dir: az-experiments
           - dir: az-vm
     name: Format & Validate - ${{ matrix.dir }}
