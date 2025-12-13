@@ -21,3 +21,11 @@ echo $ARM_SUBSCRIPTION_ID
 
 **NOTE**: Azure can create _hidden_ resources, which will not be deleted by `terraform`
 (obviously: terraform didn't create them). This may require manual clean up.
+
+## AWS authentication
+
+Via credentials file (`~/.aws/credentials`) in AWS CLI.
+
+- install AWS CLI if not already;
+- authenticate with AWS CLI: `aws configure` and follow the prompts.
+  This will create the credentials file (`~/.aws/credentials`) with `default` profile.
