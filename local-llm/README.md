@@ -14,7 +14,8 @@ Choose from a [list of available models](https://ollama.com/search).
 
 ## Start the Chat-like web interface
 
-Start Chat WebUI:
+Start [Open WebUI](https://github.com/open-webui/open-webui) (via docker image):
 ```bash
 docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main
 ```
+and open http://localhost:3000 in your browser.
