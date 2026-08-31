@@ -1,0 +1,14 @@
+---
+- name: Verify connectivity to managed hosts
+  hosts: hosts
+  gather_facts: true
+
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+    - name: Show OS info gathered by facts
+      ansible.builtin.debug:
+        msg: >-
+          {{ inventory_hostname }} is running {{ ansible_distribution }}
+          {{ ansible_distribution_version }}

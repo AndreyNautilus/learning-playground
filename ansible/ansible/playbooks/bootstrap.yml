@@ -1,0 +1,15 @@
+---
+# The host images are minimal and may not ship python3, which almost every
+# Ansible module needs. The 'raw' module works over plain SSH with no python
+# required, so we use it once to install python3 - a real step you'll also
+# hit against fresh cloud/VM images.
+- name: Bootstrap python3 on managed hosts
+  hosts: hosts
+  gather_facts: false
+
+  tasks:
+    - name: Ensure python3 is present
+      ansible.builtin.raw: >
+        command -v python3 ||
+        (apk add --no-cache python3 || (apt-get update && apt-get install -y python3))
+      changed_when: false

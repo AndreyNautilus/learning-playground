@@ -1,0 +1,70 @@
+networks:
+  ansible_net:
+    driver: bridge
+
+services:
+
+  # ---- Managed host #1 ----
+  host1:
+    image: lscr.io/linuxserver/openssh-server:latest
+    container_name: ansible-host1
+    hostname: host1
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+      - USER_NAME=ansible
+      - PUBLIC_KEY_FILE=/keys/ansible_key.pub
+      - SUDO_ACCESS=true
+      - PASSWORD_ACCESS=false
+    volumes:
+      - ./ssh_keys/ansible_key.pub:/keys/ansible_key.pub:ro
+    networks:
+      - ansible_net
+    restart: unless-stopped
+
+  # ---- Managed host #2 ----
+  host2:
+    image: lscr.io/linuxserver/openssh-server:latest
+    container_name: ansible-host2
+    hostname: host2
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+      - USER_NAME=ansible
+      - PUBLIC_KEY_FILE=/keys/ansible_key.pub
+      - SUDO_ACCESS=true
+      - PASSWORD_ACCESS=false
+    volumes:
+      - ./ssh_keys/ansible_key.pub:/keys/ansible_key.pub:ro
+    networks:
+      - ansible_net
+    restart: unless-stopped
+
+  # ---- Control node (has Ansible installed) ----
+  control:
+    image: willhallonline/ansible:latest
+    container_name: ansible-control
+    hostname: control
+    # Copy the mounted keys into ~/.ssh with correct permissions, then idle.
+    # (Bind-mounted files from Windows often have permissions SSH will refuse to use in place.)
+    entrypoint: >
+      sh -c "
+      mkdir -p /root/.ssh &&
+      cp /keys/ansible_key /root/.ssh/ansible_key &&
+      cp /keys/ansible_key.pub /root/.ssh/ansible_key.pub &&
+      chmod 700 /root/.ssh &&
+      chmod 600 /root/.ssh/ansible_key &&
+      chmod 644 /root/.ssh/ansible_key.pub &&
+      sleep infinity
+      "
+    volumes:
+      - ./ansible:/ansible
+      - ./ssh_keys:/keys:ro
+    working_dir: /ansible
+    networks:
+      - ansible_net
+    depends_on:
+      - host1
+      - host2
