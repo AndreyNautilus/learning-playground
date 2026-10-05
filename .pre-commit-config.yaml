@@ -15,7 +15,7 @@ repos:
       - id: check-hooks-apply
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.2
+    rev: v2.4.3
     hooks:
       - id: codespell
         name: Common misspellings
@@ -28,7 +28,7 @@ repos:
   - repo: https://github.com/pre-commit/mirrors-clang-format
     # 'clang-format' may produce different result for different versions
     # with the same config. Better to choose one version and stick to it.
-    rev: dd18dad857d6133e90bbe478f4f2f22ec0030269  # frozen: v22.1.5
+    rev: a9a8a861f30ed207ead7d5a3b7e8032283ba5da7  # frozen: v23.1.2
     hooks:
       - id: clang-format
 
