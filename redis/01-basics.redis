@@ -1,0 +1,18 @@
+# Run with:  (bash/zsh)  docker compose run --rm -T redis-cli < lab/01-basics.redis
+#            (PowerShell) Get-Content lab/01-basics.redis | docker compose run --rm -T redis-cli
+PING
+SELECT 1
+SET user:1:name "Alice"
+SET session:abc123 "payload" EX 60
+GET user:1:name
+TTL session:abc123
+HSET user:1 name Alice email alice@example.com age 30
+HGETALL user:1
+LPUSH queue:jobs job1 job2 job3
+LRANGE queue:jobs 0 -1
+SADD tags:post:1 redis cache docker
+SMEMBERS tags:post:1
+ZADD leaderboard 100 alice 250 bob 175 carol
+ZRANGE leaderboard 0 -1 WITHSCORES REV
+INCR counter:visits
+DBSIZE
